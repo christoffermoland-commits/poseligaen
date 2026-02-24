@@ -7,6 +7,7 @@ import { useState } from 'react';
 
 const links = [
   { href: '/', label: 'Ligatabell' },
+  { href: '/live', label: 'Live', isLive: true },
   { href: '/stats', label: 'Statistikk' },
 ];
 
@@ -31,12 +32,18 @@ export default function Navbar() {
               key={link.href}
               href={link.href}
               className={cn(
-                'rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                'rounded-lg px-3 py-2 text-sm font-medium transition-colors flex items-center gap-1.5',
                 pathname === link.href
                   ? 'bg-fpl-purple text-white'
                   : 'text-fpl-muted hover:bg-fpl-surface-light hover:text-foreground'
               )}
             >
+              {'isLive' in link && link.isLive && (
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
+                </span>
+              )}
               {link.label}
             </Link>
           ))}
@@ -66,12 +73,18 @@ export default function Navbar() {
               href={link.href}
               onClick={() => setMenuOpen(false)}
               className={cn(
-                'block rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                'flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                 pathname === link.href
                   ? 'bg-fpl-purple text-white'
                   : 'text-fpl-muted hover:bg-fpl-surface-light hover:text-foreground'
               )}
             >
+              {'isLive' in link && link.isLive && (
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
+                </span>
+              )}
               {link.label}
             </Link>
           ))}
