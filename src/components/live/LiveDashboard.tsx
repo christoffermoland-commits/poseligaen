@@ -4,6 +4,7 @@ import { useState, useMemo, useCallback } from 'react';
 import useSWR from 'swr';
 import LiveIndicator from './LiveIndicator';
 import LiveManagerRow from './LiveManagerRow';
+import LiveFixtures from './LiveFixtures';
 import type {
   StandingsEntry,
   Player,
@@ -11,6 +12,7 @@ import type {
   Pick,
   LiveEvent,
   FPLEvent,
+  Fixture,
 } from '@/lib/types';
 
 interface ManagerPicksData {
@@ -25,6 +27,8 @@ interface LiveDashboardProps {
   initialLiveData: LiveEvent;
   playerMap: Record<number, Player>;
   teamMap: Record<number, string>;
+  initialFixtures: Fixture[];
+  teamNames: Record<number, string>;
 }
 
 const fetcher = (url: string) => fetch(url).then(r => r.json());
@@ -35,6 +39,8 @@ export default function LiveDashboard({
   initialLiveData,
   playerMap: playerMapRaw,
   teamMap: teamMapRaw,
+  initialFixtures,
+  teamNames,
 }: LiveDashboardProps) {
   const [lastUpdated, setLastUpdated] = useState(new Date());
 
@@ -106,32 +112,47 @@ export default function LiveDashboard({
         />
       </div>
 
-      {/* Manager ranking */}
-      <div className="rounded-xl border border-fpl-border overflow-hidden">
-        {/* Header */}
-        <div className="flex items-center gap-2 border-b border-fpl-border bg-fpl-dark px-3 py-2 sm:gap-4">
-          <span className="w-6 text-center text-xs font-medium text-fpl-muted">#</span>
-          <span className="flex-1 text-xs font-medium text-fpl-muted">Manager</span>
-          <span className="hidden sm:block text-center min-w-[100px] text-xs font-medium text-fpl-muted">Kaptein</span>
-          <span className="hidden sm:block w-16 text-center text-xs font-medium text-fpl-muted">Chip</span>
-          <span className="w-12 text-right text-xs font-medium text-fpl-muted">Poeng</span>
-          <span className="w-4" /> {/* Chevron space */}
+      {/* Two-column layout: managers + fixtures */}
+      <div className="flex flex-col lg:flex-row gap-4">
+        {/* Manager ranking - left/main column */}
+        <div className="flex-1 min-w-0">
+          <div className="rounded-xl border border-fpl-border overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center gap-2 border-b border-fpl-border bg-fpl-dark px-3 py-2 sm:gap-4">
+              <span className="w-6 text-center text-xs font-medium text-fpl-muted">#</span>
+              <span className="flex-1 text-xs font-medium text-fpl-muted">Manager</span>
+              <span className="hidden sm:block text-center min-w-[100px] text-xs font-medium text-fpl-muted">Kaptein</span>
+              <span className="hidden sm:block w-16 text-center text-xs font-medium text-fpl-muted">Chip</span>
+              <span className="w-12 text-right text-xs font-medium text-fpl-muted">Poeng</span>
+              <span className="w-4" /> {/* Chevron space */}
+            </div>
+
+            {/* Manager rows */}
+            {sortedManagers.map((m, i) => (
+              <LiveManagerRow
+                key={m.entry.entry}
+                rank={i + 1}
+                entry={m.entry}
+                picks={m.picks}
+                activeChip={m.activeChip}
+                liveGwPoints={m.liveGwPoints}
+                playerMap={playerMap}
+                liveStats={liveStats}
+                teamMap={teamMap}
+              />
+            ))}
+          </div>
         </div>
 
-        {/* Manager rows */}
-        {sortedManagers.map((m, i) => (
-          <LiveManagerRow
-            key={m.entry.entry}
-            rank={i + 1}
-            entry={m.entry}
-            picks={m.picks}
-            activeChip={m.activeChip}
-            liveGwPoints={m.liveGwPoints}
-            playerMap={playerMap}
-            liveStats={liveStats}
-            teamMap={teamMap}
+        {/* Fixtures sidebar - right column */}
+        <div className="lg:w-[340px] lg:flex-shrink-0">
+          <LiveFixtures
+            eventId={currentEvent.id}
+            initialFixtures={initialFixtures}
+            teamNames={teamNames}
+            playerMap={playerMapRaw}
           />
-        ))}
+        </div>
       </div>
     </div>
   );

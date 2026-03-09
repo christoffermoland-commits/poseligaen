@@ -3,11 +3,12 @@ import {
   getLeagueStandings,
   getLiveEvent,
   getGameweekPicks,
+  getFixturesByEvent,
 } from '@/lib/fpl-api';
 import { FPL_LEAGUE_ID } from '@/lib/config';
 import LiveDashboard from '@/components/live/LiveDashboard';
 import Link from 'next/link';
-import type { Player, FPLTeam } from '@/lib/types';
+import type { Player, FPLTeam, Fixture } from '@/lib/types';
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -52,10 +53,11 @@ export default async function LivePage() {
     );
   }
 
-  // Fetch live data and picks for all managers
+  // Fetch live data, fixtures, and picks for all managers
   const entries = standings.standings.results;
-  const [liveData, ...picksResults] = await Promise.all([
+  const [liveData, fixtures, ...picksResults] = await Promise.all([
     getLiveEvent(activeEvent.id),
+    getFixturesByEvent(activeEvent.id),
     ...entries.map(e =>
       getGameweekPicks(e.entry, activeEvent.id).catch(() => null)
     ),
@@ -67,6 +69,10 @@ export default async function LivePage() {
 
   const teamMapObj: Record<number, string> = {};
   bootstrap.teams.forEach((t: FPLTeam) => { teamMapObj[t.id] = t.short_name; });
+
+  // Full team names for fixture display
+  const teamNamesObj: Record<number, string> = {};
+  bootstrap.teams.forEach((t: FPLTeam) => { teamNamesObj[t.id] = t.name; });
 
   // Build managers data
   const managers = entries.map((entry, i) => {
@@ -90,6 +96,8 @@ export default async function LivePage() {
         initialLiveData={liveData}
         playerMap={playerMapObj}
         teamMap={teamMapObj}
+        initialFixtures={fixtures}
+        teamNames={teamNamesObj}
       />
     </div>
   );

@@ -7,6 +7,7 @@ import type {
   EntryHistory,
   GameweekPicks,
   LiveEvent,
+  Fixture,
   Transfer,
 } from './types';
 
@@ -46,6 +47,10 @@ export function getGameweekPicks(teamId: string | number, gw: number): Promise<G
 
 export function getLiveEvent(eventId: number): Promise<LiveEvent> {
   return fplFetch(`/event/${eventId}/live/`, 60);
+}
+
+export function getFixturesByEvent(eventId: number): Promise<Fixture[]> {
+  return fplFetch(`/fixtures/?event=${eventId}`, 60);
 }
 
 export function getTransfers(teamId: string | number): Promise<Transfer[]> {

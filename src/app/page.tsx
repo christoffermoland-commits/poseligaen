@@ -1,9 +1,10 @@
-import { getLeagueStandings, getBootstrapData, getLiveEvent, getGameweekPicks } from '@/lib/fpl-api';
+import { getLeagueStandings, getBootstrapData, getLiveEvent, getGameweekPicks, getEntryHistory } from '@/lib/fpl-api';
 import { FPL_LEAGUE_ID } from '@/lib/config';
 import LeagueTable from '@/components/league/LeagueTable';
 import LiveLeagueTable from '@/components/league/LiveLeagueTable';
+import FormCards from '@/components/league/FormCards';
 import Link from 'next/link';
-import type { Pick as FPLPick } from '@/lib/types';
+import type { Pick as FPLPick, GameweekHistory } from '@/lib/types';
 
 export default async function HomePage({
   searchParams,
@@ -44,6 +45,17 @@ export default async function HomePage({
     }));
   }
 
+  // Fetch history for all managers (for form cards)
+  const historyResults = await Promise.all(
+    entries.map(e => getEntryHistory(e.entry).catch(() => null))
+  );
+
+  const managerHistories = entries.map((entry, i) => ({
+    entryName: entry.entry_name,
+    playerName: entry.player_name,
+    history: historyResults[i]?.current || [],
+  })).filter(m => m.history.length > 0);
+
   return (
     <div className="space-y-6">
       {isOtherLeague && (
@@ -83,6 +95,11 @@ export default async function HomePage({
         />
       ) : (
         <LeagueTable entries={entries} />
+      )}
+
+      {/* HOT/NOT form cards */}
+      {managerHistories.length >= 6 && (
+        <FormCards managerHistories={managerHistories} />
       )}
     </div>
   );

@@ -224,6 +224,30 @@ export interface FixtureExplain {
   stats: { identifier: string; points: number; value: number }[];
 }
 
+// Fixtures
+export interface Fixture {
+  id: number;
+  event: number | null;
+  kickoff_time: string | null;
+  started: boolean | null;
+  finished: boolean;
+  finished_provisional: boolean;
+  minutes: number;
+  team_h: number;
+  team_a: number;
+  team_h_score: number | null;
+  team_a_score: number | null;
+  team_h_difficulty: number;
+  team_a_difficulty: number;
+  stats: FixtureStat[];
+}
+
+export interface FixtureStat {
+  identifier: string;
+  a: { element: number; value: number }[];
+  h: { element: number; value: number }[];
+}
+
 // Transfers
 export interface Transfer {
   element_in: number;
