@@ -108,6 +108,32 @@ export interface ManagerEntry {
   started_event: number;
 }
 
+// Manager entry with leagues (from /entry/{id}/ endpoint)
+export interface ManagerLeagueEntry {
+  id: number;
+  name: string;
+  short_name: string | null;
+  created: string;
+  league_type: string;
+  scoring: string;
+  rank: number;
+  max_entries: number | null;
+  admin_entry: number | null;
+  entry_rank: number;
+  entry_last_rank: number;
+  rank_count: number;
+  entry_can_leave: boolean;
+  entry_can_admin: boolean;
+  entry_can_invite: boolean;
+}
+
+export interface ManagerWithLeagues extends ManagerEntry {
+  leagues: {
+    classic: ManagerLeagueEntry[];
+    h2h: ManagerLeagueEntry[];
+  };
+}
+
 // History
 export interface EntryHistory {
   current: GameweekHistory[];

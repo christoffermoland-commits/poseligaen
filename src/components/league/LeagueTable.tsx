@@ -36,7 +36,7 @@ function MovementArrow({ current, last }: { current: number; last: number }) {
   return <span className="text-xs text-fpl-muted">-</span>;
 }
 
-export default function LeagueTable({ entries }: { entries: StandingsEntry[] }) {
+export default function LeagueTable({ entries, isLive }: { entries: StandingsEntry[]; isLive?: boolean }) {
   return (
     <div className="overflow-x-auto rounded-xl border border-fpl-border">
       <table className="w-full text-sm">
@@ -45,7 +45,17 @@ export default function LeagueTable({ entries }: { entries: StandingsEntry[] }) 
             <th className="px-3 py-3 text-left font-medium text-fpl-muted w-12">#</th>
             <th className="px-3 py-3 text-center font-medium text-fpl-muted w-12"></th>
             <th className="px-3 py-3 text-left font-medium text-fpl-muted">Lag</th>
-            <th className="px-3 py-3 text-right font-medium text-fpl-muted">GW</th>
+            <th className="px-3 py-3 text-right font-medium text-fpl-muted">
+              <span className="flex items-center justify-end gap-1.5">
+                GW
+                {isLive && (
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
+                  </span>
+                )}
+              </span>
+            </th>
             <th className="px-3 py-3 text-right font-medium text-fpl-muted">Totalt</th>
           </tr>
         </thead>

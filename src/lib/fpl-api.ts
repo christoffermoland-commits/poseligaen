@@ -3,6 +3,7 @@ import type {
   BootstrapStatic,
   LeagueStandingsResponse,
   ManagerEntry,
+  ManagerWithLeagues,
   EntryHistory,
   GameweekPicks,
   LiveEvent,
@@ -29,6 +30,10 @@ export function getLeagueStandings(leagueId: string): Promise<LeagueStandingsRes
 
 export function getManagerEntry(teamId: string | number): Promise<ManagerEntry> {
   return fplFetch(`/entry/${teamId}/`, 600);
+}
+
+export function getManagerWithLeagues(teamId: string | number): Promise<ManagerWithLeagues> {
+  return fplFetch(`/entry/${teamId}/`, 300);
 }
 
 export function getEntryHistory(teamId: string | number): Promise<EntryHistory> {
