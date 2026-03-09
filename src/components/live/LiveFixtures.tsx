@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import useSWR from 'swr';
+import Link from 'next/link';
 import type { Fixture, Player } from '@/lib/types';
 
 const fetcher = (url: string) => fetch(url).then(r => r.json());
@@ -42,12 +43,13 @@ function MatchCard({
 
   const getPlayerName = (elementId: number) => playerMap[elementId]?.web_name || `#${elementId}`;
 
-  // Build goal event strings
+  // Build goal event strings with assists
   const buildGoalEvents = (scorers: { element: number; value: number }[], assistList: { element: number; value: number }[]) => {
     return scorers.map(g => {
-      const assist = assistList.find(a => a.element !== g.element);
       const goalText = g.value > 1 ? `${getPlayerName(g.element)} x${g.value}` : getPlayerName(g.element);
-      return goalText;
+      // Find assist for this goal (any assister on the same side)
+      const assistNames = assistList.map(a => getPlayerName(a.element));
+      return { goalText, assistNames };
     });
   };
 
@@ -106,18 +108,28 @@ function MatchCard({
         </div>
       </div>
 
-      {/* Goal events */}
+      {/* Goal events with assists */}
       {(homeGoalEvents.length > 0 || awayGoalEvents.length > 0) && (
         <div className="mt-2 flex justify-between gap-2 text-[11px]">
           <div className="flex-1 text-right space-y-0.5">
             {homeGoalEvents.map((g, i) => (
-              <div key={i} className="text-fpl-green">&#9917; {g}</div>
+              <div key={i}>
+                <span className="text-fpl-green">&#9917; {g.goalText}</span>
+                {g.assistNames.length > 0 && (
+                  <span className="text-fpl-muted text-[10px]"> ({g.assistNames.join(', ')})</span>
+                )}
+              </div>
             ))}
           </div>
           <div className="w-[50px]" />
           <div className="flex-1 space-y-0.5">
             {awayGoalEvents.map((g, i) => (
-              <div key={i} className="text-fpl-green">&#9917; {g}</div>
+              <div key={i}>
+                <span className="text-fpl-green">&#9917; {g.goalText}</span>
+                {g.assistNames.length > 0 && (
+                  <span className="text-fpl-muted text-[10px]"> ({g.assistNames.join(', ')})</span>
+                )}
+              </div>
             ))}
           </div>
         </div>
@@ -186,6 +198,8 @@ export default function LiveFixtures({
     });
   }, [fixtures]);
 
+  const allUpcoming = sortedFixtures.length > 0 && sortedFixtures.every(f => getMatchStatus(f) === 'upcoming');
+
   return (
     <div className="space-y-2">
       <h3 className="text-xs font-bold text-fpl-muted uppercase tracking-wider">Kamper</h3>
@@ -198,6 +212,22 @@ export default function LiveFixtures({
             playerMap={playerMap}
           />
         ))}
+
+        {/* Retro FIFA suggestion when waiting for kickoff */}
+        {allUpcoming && (
+          <Link
+            href="/spill"
+            className="block rounded-lg border border-fpl-green/20 bg-fpl-green/5 p-3 text-center space-y-1 transition-colors hover:bg-fpl-green/10"
+          >
+            <div className="text-sm">🎮</div>
+            <p className="text-[11px] text-fpl-muted">
+              Venter på kampstart? Spill litt retro-FIFA!
+            </p>
+            <span className="text-[11px] font-medium text-fpl-green">
+              Spill nå &rarr;
+            </span>
+          </Link>
+        )}
       </div>
     </div>
   );

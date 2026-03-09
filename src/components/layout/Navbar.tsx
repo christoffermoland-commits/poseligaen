@@ -11,6 +11,7 @@ const links = [
   { href: '/', label: 'Ligatabell' },
   { href: '/live', label: 'Live', isLive: true },
   { href: '/stats', label: 'Statistikk' },
+  { href: '/spill', label: 'Spill', isGame: true },
 ];
 
 const DEFAULT_LEAGUE_ID = process.env.NEXT_PUBLIC_FPL_LEAGUE_ID || '464370';
@@ -76,6 +77,9 @@ function NavbarInner() {
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
                   </span>
                 )}
+                {'isGame' in link && link.isGame && (
+                  <span className="text-xs">🎮</span>
+                )}
                 {link.label}
               </Link>
             ))}
@@ -138,6 +142,9 @@ function NavbarInner() {
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
                   </span>
+                )}
+                {'isGame' in link && link.isGame && (
+                  <span className="text-xs">🎮</span>
                 )}
                 {link.label}
               </Link>

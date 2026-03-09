@@ -49,6 +49,20 @@ export default async function LivePage() {
         >
           Se {lastFinished.name} &rarr;
         </Link>
+
+        {/* Retro FIFA suggestion */}
+        <div className="mt-4 rounded-xl border border-fpl-border bg-fpl-surface p-4 space-y-3 max-w-sm">
+          <div className="text-2xl">🎮</div>
+          <p className="text-sm text-fpl-muted">
+            Hva med å spille litt retro-FIFA mens du venter på neste runde?
+          </p>
+          <Link
+            href="/spill"
+            className="inline-block rounded-lg bg-fpl-green/10 border border-fpl-green/30 px-4 py-2 text-sm font-medium text-fpl-green transition-colors hover:bg-fpl-green/20"
+          >
+            Spill retro FIFA &rarr;
+          </Link>
+        </div>
       </div>
     );
   }

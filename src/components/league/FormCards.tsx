@@ -68,7 +68,7 @@ export default function FormCards({ managerHistories }: FormCardsProps) {
   const sorted = [...forms].sort((a, b) => b.formTotal - a.formTotal);
 
   const hot = sorted.slice(0, 3);
-  const not = sorted.slice(-3).reverse(); // worst last
+  const not = sorted.slice(-3); // rank n-2, n-1, n (worst at bottom)
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
