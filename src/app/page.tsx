@@ -48,7 +48,7 @@ export default async function HomePage({
     <div className="space-y-6">
       {isOtherLeague && (
         <Link href="/" className="text-sm text-fpl-muted hover:text-fpl-green transition-colors">
-          &larr; Tilbake til Pøseligaen
+          &larr; Tilbake til min liga
         </Link>
       )}
 

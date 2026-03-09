@@ -53,7 +53,7 @@ function NavbarInner() {
           <Link href="/" className="flex items-center gap-2.5">
             <Image src="/pl-logo.png" alt="Premier League" width={36} height={36} className="rounded" />
             <span className="bg-gradient-to-r from-fpl-green to-fpl-cyan bg-clip-text text-xl font-bold text-transparent">
-              Pøseligaen
+              FS-appen
             </span>
           </Link>
 

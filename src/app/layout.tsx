@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Pøseligaen - Fantasy Premier League',
-  description: 'Ligaoversikt og statistikk for Pøseligaen i Fantasy Premier League',
+  title: 'FS-appen - Fantasy Premier League',
+  description: 'Ligaoversikt og statistikk for Fantasy Premier League',
 };
 
 export default function RootLayout({
